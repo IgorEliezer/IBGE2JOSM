@@ -17,8 +17,9 @@ from tkinter import filedialog
 print("\nIBGE->JOSM: Converte dados do IBGE/CNEFE para JOSM/CSV.")
 print("Criado por: " + __author__ + " (www.igoreliezer.com)")
 print("Data: " + __date__)
-print("\n\nInstrução: após teclar ENTER, selecione um arquivo txt com os dados do IBGE/CNEFE.\n")
-input("\nTecle ENTER para seguir: ")
+print(
+    "\nInstrução: após teclar ENTER, selecione um arquivo txt com os dados do IBGE/CNEFE e programa tentará convertê-lo.")
+input("\nTecle ENTER para prosseguir: ")
 
 
 # FUNCTIONS
@@ -61,18 +62,25 @@ Convert DMS list (00 00 00 O) to decimal coord string ("-00.000000...").
 
 
 # EXECUTION
+
+# File 1: select and try to read the header
 file = select_file()
-f = open(file, 'r', encoding="utf8")
+try:
+    f = open(file, 'r', encoding='utf-8')
+    header = f.readline().split(';')
+except UnicodeDecodeError:
+    f = open(file, 'r', encoding='windows-1250')
+    header = f.readline().split(';')
+
+# File 2 - create and write the header
 file_new = os.path.splitext(file)[0] + '.csv'
 f_new = open(file_new, 'w', encoding="utf8")
-
-# Write: Header
-header = f.readline().split(';')
 f_new.write(','.join(header[0:5] + ['DMS_lat', 'DMS_lon', 'lat', 'lon'] + header[7:]))
 
-# Write: Body
+# File 1 to file 2
+# TODO: output number of lines
 for line in f:
-    if not re.match('\'C', line):
+    if not re.match('\'C', line):  # skip
         data = line.split(';')
         lat = data[5].split(' ')
         lon = data[6].split(' ')
@@ -80,10 +88,10 @@ for line in f:
             line_new = ','.join(data[0:5] + [dms(lat)] + [dms(lon)] + [dms2dd(lat)] + [dms2dd(lon)] + data[7:])
             f_new.write(line_new)
 
-# Finish
-print("\nSalvo em: " + file_new)
-input("\nTecle ENTER para concluir. ")
-
 # Close files
 f.close()
 f_new.close()
+
+# Finish
+print("\nSalvo em: " + file_new)
+input("\nTecle ENTER para sair. ")
