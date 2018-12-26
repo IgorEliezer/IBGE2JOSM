@@ -17,9 +17,11 @@ from tkinter import filedialog
 print("\nIBGE->JOSM: Converte dados do IBGE/CNEFE para JOSM/CSV.")
 print("Criado por: " + __author__ + " (www.igoreliezer.com)")
 print("Data: " + __date__)
-print(
-    "\nInstrução: após teclar ENTER, selecione um arquivo txt com os dados do IBGE/CNEFE e programa tentará convertê-lo.")
-input("\nTecle ENTER para prosseguir: ")
+print("\nInstrução:")
+print("1. Após teclar ENTER, selecione um arquivo txt com os dados do IBGE/CNEFE.")
+print("2. Programa tentará o arquivo (codificações suportadas: UTF-8 ou ANSI).")
+print("3. Será gerado um arquivo CVS que poderá ser aberto no JOSM (requer o plug-in Opendata).")
+input("Tecle ENTER para prosseguir: ")
 
 
 # FUNCTIONS
@@ -68,30 +70,35 @@ file = select_file()
 try:
     f = open(file, 'r', encoding='utf-8')
     header = f.readline().split(';')
+    enc = "UTF-8"
 except UnicodeDecodeError:
     f = open(file, 'r', encoding='windows-1250')
     header = f.readline().split(';')
+    enc = "ANSI"
 
 # File 2 - create and write the header
+print("\nCodificação detectada: " + enc + ".")
 file_new = os.path.splitext(file)[0] + '.csv'
 f_new = open(file_new, 'w', encoding="utf8")
 f_new.write(','.join(header[0:5] + ['DMS_lat', 'DMS_lon', 'lat', 'lon'] + header[7:]))
 
 # File 1 to file 2
-# TODO: output number of lines
+ct = 0
 for line in f:
-    if not re.match('\'C', line):  # skip
+    if not re.match('\'C', line):  # must not start with '
         data = line.split(';')
         lat = data[5].split(' ')
         lon = data[6].split(' ')
         if len(lat) == len(lon) == 4:
             line_new = ','.join(data[0:5] + [dms(lat)] + [dms(lon)] + [dms2dd(lat)] + [dms2dd(lon)] + data[7:])
             f_new.write(line_new)
+            ct += 1
 
 # Close files
+print("Gerou " + str(ct) + " linhas.")
 f.close()
 f_new.close()
 
 # Finish
-print("\nSalvo em: " + file_new)
+print("Salvo em: " + file_new)
 input("\nTecle ENTER para sair. ")
