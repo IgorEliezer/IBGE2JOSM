@@ -31,7 +31,8 @@ Select file
     :return: string
     """
     Tk().withdraw()
-    filename = filedialog.askopenfilename(initialdir="/", title="Selecione um arquivo para converter",
+    cwd = "/"
+    filename = filedialog.askopenfilename(initialdir=cwd, title="Selecione um arquivo para converter",
                                           filetypes=(("Arquivos de texto", "*.txt"), ("Todos os arquivos", "*.*")))
     return filename
 
@@ -86,7 +87,7 @@ option = input('''\nInforme o tipo de lista de endereços para conversão:
 ENTER ou qualquer = sair
 Entre a opção: ''')
 
-
+# Por setor censitário
 if option == '1':
     # File 1: select and try to read the header
     file = select_file()
@@ -116,10 +117,11 @@ if option == '1':
                 f_out.write(line_out)
                 ct += 1
 
+# Por distrito/subsdistrito
 elif option == '2':
     # select and generate the header
     file = select_file()
-    f = open(file, 'r', encoding='utf-8')
+    f = open(file, 'r', encoding='windows-1250')
     file_out = os.path.splitext(file)[0] + '.csv'
     f_out = open(file_out, 'w', encoding="utf-8")
     f_out.write('cod,log,num,c1,c2,c2_num,c3,c3_num,c4,c4_num,DMS_lat,DMS_lon,lat,lon,localidade,desc1,desc2,cep,place')
@@ -145,6 +147,5 @@ if option in ['1', '2']:
     f_out.close()
     # Finish
     print("Salvo em: " + file_out)
-
 
 input("\nTecle ENTER para sair: ")
