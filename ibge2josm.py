@@ -87,10 +87,12 @@ option = input('''\nInforme o tipo de lista de endereços para conversão:
 ENTER ou qualquer = sair
 Entre a opção: ''')
 
-# Por setor censitário
-if option == '1':
-    # File 1: select and try to read the header
+if option in ['1', '2']:
     file = select_file()
+
+# Por setor censitário
+if option == '1' and file:
+    # File 1: select and try to read the header
     try:
         f = open(file, 'r', encoding='utf-8')
         header = f.readline().split(';')
@@ -118,9 +120,8 @@ if option == '1':
                 ct += 1
 
 # Por distrito/subsdistrito
-elif option == '2':
+elif option == '2' and file:
     # select and generate the header
-    file = select_file()
     f = open(file, 'r', encoding='windows-1250')
     file_out = os.path.splitext(file)[0] + '.csv'
     f_out = open(file_out, 'w', encoding="utf-8")
@@ -140,7 +141,7 @@ elif option == '2':
 else:
     print('Nada foi feito.')
 
-if option in ['1', '2']:
+if option in ['1', '2'] and file:
     # Close files
     print("Gerou " + str(ct) + " linhas.")
     f.close()
@@ -148,4 +149,4 @@ if option in ['1', '2']:
     # Finish
     print("Salvo em: " + file_out)
 
-input("\nTecle ENTER para sair: ")
+input("Tecle ENTER para sair: ")
