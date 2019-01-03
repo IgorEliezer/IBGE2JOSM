@@ -14,14 +14,18 @@ from tkinter import Tk
 from tkinter import filedialog
 
 # Messages
-print("\nIBGE->JOSM: Converte dados do IBGE/CNEFE para JOSM/CSV.")
-print("Criado por: " + __author__ + " (www.igoreliezer.com)")
+print("\n=========== IBGE->JOSM ===========")
+print("Programa que converte dados do IBGE/CNEFE para usar no JOSM.")
+print("Criado por: " + __author__ + " Arquiteto Urbanista (www.igoreliezer.com)")
 print("Data: " + __date__)
-print("\nInstrução:")
-print("1. Após teclar ENTER, selecione um arquivo txt com os dados do IBGE/CNEFE.")
-print("2. Programa tentará o arquivo (codificações suportadas: UTF-8 ou ANSI).")
-print("3. Será gerado um arquivo CVS que poderá ser aberto no JOSM (requer o plug-in Opendata).")
-input("Tecle ENTER para prosseguir: ")
+print("\nInstruções")
+print("  1. Após teclar ENTER, selecione um arquivo TXT com dados do IBGE/CNEFE.")
+print("  * Codificações suportadas: UTF-8 ou ANSI/Windows 1250.")
+print("  2. Informe o tipo de lista de endereços do arquivo txt selecionado.")
+print("  3. O programa irá tentar convertê-lo em arquivo CVS formatado para o JOSM.")
+print("  * JOSM requer o plug-in Opendata.")
+print("  4. O arquivo CVS será salvo com o mesmo nome na mesma pasta do arquivo TXT.")
+input("\nTecle ENTER para prosseguir: ")
 
 
 # FUNCTIONS
@@ -30,6 +34,7 @@ def select_file():
 Select file
     :return: string
     """
+    print("Selecionando arquivo...")
     Tk().withdraw()
     cwd = "/"
     filename = filedialog.askopenfilename(initialdir=cwd, title="Selecione um arquivo para converter",
@@ -81,14 +86,14 @@ Convert fixed width line string from a file into list.
 
 
 # EXECUTION
-option = input('''\nInforme o tipo de lista de endereços para conversão:
-1 = Por setor censitário
-2 = Por distrito/subsdistrito
-ENTER ou qualquer = sair
-Entre a opção: ''')
+file = select_file()
 
-if option in ['1', '2']:
-    file = select_file()
+if file:
+    option = input("\nInforme o tipo de lista de endereços para conversão:\n"
+                   "  1 = Por setor censitário\n"
+                   "  2 = Por distrito/subsdistrito\n"
+                   "  ENTER ou qualquer tecla = sair\n"
+                   "Entre a opção: ")
 
 # Por setor censitário
 if option == '1' and file:
@@ -96,16 +101,13 @@ if option == '1' and file:
     try:
         f = open(file, 'r', encoding='utf-8')
         header = f.readline().split(';')
-        enc = "UTF-8"
     except UnicodeDecodeError:
         f = open(file, 'r', encoding='windows-1250')
         header = f.readline().split(';')
-        enc = "ANSI"
 
     # File 2 - create and write the header
     file_out = os.path.splitext(file)[0] + '.csv'
     f_out = open(file_out, 'w', encoding="utf-8")
-    f_out.write(','.join(header[0:5] + ['DMS_lat', 'DMS_lon', 'lat', 'lon'] + header[7:]))
 
     # File 1 to file 2
     ct = 0
@@ -115,7 +117,8 @@ if option == '1' and file:
             lat = data[5].split(' ')
             lon = data[6].split(' ')
             if len(lat) == len(lon) == 4:
-                line_out = ','.join(data[0:5] + [dms(lat)] + [dms(lon)] + [dms2dd(lat)] + [dms2dd(lon)] + data[7:])
+                line_out = ','.join(data[0:5] + [dms(lat)] + [dms(lon)] + [dms2dd(lat)] + [dms2dd(lon)] + data[7:16] + [
+                    'isolated_dwelling\n'])
                 f_out.write(line_out)
                 ct += 1
 
@@ -143,7 +146,7 @@ else:
 
 if option in ['1', '2'] and file:
     # Close files
-    print("Gerou " + str(ct) + " linhas.")
+    print("\nGerou " + str(ct) + " linhas.")
     f.close()
     f_out.close()
     # Finish
