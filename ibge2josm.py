@@ -108,6 +108,7 @@ if option == '1' and file:
     # File 2 - create and write the header
     file_out = os.path.splitext(file)[0] + '.csv'
     f_out = open(file_out, 'w', encoding="utf-8")
+    f_out.write(','.join(header[0:5] + ['DMS_lat', 'DMS_lon', 'lat', 'lon'] + header[7:16] + ['place\n']))
 
     # File 1 to file 2
     ct = 0
