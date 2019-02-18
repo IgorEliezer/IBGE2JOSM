@@ -3,7 +3,7 @@
 """ibge2josm.py: a small python app that converts IBGE data for JOSM"""
 
 __author__ = 'Igor Eliezer'
-__copyright__ = "Copyright 2018, Igor Eliezer ME"
+__copyright__ = "Copyright 2018-2019"
 __date__ = '2018/12/21'
 __status__ = "Prototype"
 
@@ -16,7 +16,7 @@ from tkinter import filedialog
 # Messages
 print("\n=========== IBGE->JOSM ===========")
 print("Programa que converte dados do IBGE/CNEFE para usar no JOSM.")
-print("Criado por: " + __author__ + " Arquiteto Urbanista (www.igoreliezer.com)")
+print("Criado por: " + __author__ + " Arquiteto Urbanista e Desenvolvedor (igoreliezer.com)")
 print("Data: " + __date__)
 print("\nInstruções")
 print("  1. Após teclar ENTER, selecione um arquivo TXT com dados do IBGE/CNEFE.")
@@ -80,6 +80,7 @@ Convert fixed width line string from a file into list.
             line[161:171], line[171:191], line[191:201], line[201:221], line[221:321], line[321:336],
             line[336:351], line[351:471], line[473:513], line[513:544], line[544:]]
     data = [item.strip() for item in data]
+    data = [item.title() for item in data]
     name = ' '.join(data[1:4])  # merge [log+titulo+nome]->name
     data = [data[0]] + [' '.join(name.split())] + data[4:]  # ...+[remove double white spaces]+...
     return data
