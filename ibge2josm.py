@@ -14,7 +14,7 @@ from tkinter import Tk
 from tkinter import filedialog
 
 # Messages
-print("\n=========== IBGE->JOSM ===========")
+print("\n=========== IBGE2JOSM ===========")
 print("Programa que converte dados do IBGE/CNEFE para usar no JOSM.")
 print("Criado por: " + __author__ + " Arquiteto Urbanista e Desenvolvedor (igoreliezer.com)")
 print("Data: " + __date__)
@@ -90,15 +90,34 @@ Convert fixed width line string from a file into list.
 file = select_file()
 
 if file:
-    option = input("\nInforme o tipo de lista de endereços para conversão:\n"
-                   "  1 = Por setor censitário\n"
-                   "  2 = Por distrito/subsdistrito\n"
-                   "  ENTER ou qualquer tecla = sair\n"
+    option = input("\nInforme o tipo de lista de endereços para conversão:\n"                   
+                   "  1 = Por distrito/subsdistrito\n"
+                   "  2 = Por setor censitário\n"
+                   "  ENTER ou qualquer tecla = sair\n\n"
                    "Entre a opção: ")
 
-# Por setor censitário
+# Por distrito/subsdistrito
 if option == '1' and file:
-    # File 1: select and try to read the header
+    # select and generate the header
+    f = open(file, 'r', encoding='windows-1250')
+    file_out = os.path.splitext(file)[0] + '.csv'
+    f_out = open(file_out, 'w', encoding="utf-8")
+    f_out.write('cod,log,num,c1,c2,c2_num,c3,c3_num,c4,c4_num,DMS_lat,DMS_lon,lat,lon,localidade,desc1,desc2,cep,place')
+
+    # File 1 to file 2
+    ct = 0
+    for line in f:
+        data = fixedwidth2list(line)
+        lat = data[10].split(' ')
+        lon = data[11].split(' ')
+        if len(lat) == len(lon) == 4:
+            line_out = ','.join(data[0:10] + [dms(lat)] + [dms(lon)] + [dms2dd(lat)] + [dms2dd(lon)] + data[12:])
+            f_out.write('\n' + line_out + ',isolated_dwelling')
+            ct += 1
+
+# Por setor censitário
+elif option == '2' and file:
+    # select and try to read the header
     try:
         f = open(file, 'r', encoding='utf-8')
         header = f.readline().split(';')
@@ -123,25 +142,6 @@ if option == '1' and file:
                     'isolated_dwelling\n'])
                 f_out.write(line_out)
                 ct += 1
-
-# Por distrito/subsdistrito
-elif option == '2' and file:
-    # select and generate the header
-    f = open(file, 'r', encoding='windows-1250')
-    file_out = os.path.splitext(file)[0] + '.csv'
-    f_out = open(file_out, 'w', encoding="utf-8")
-    f_out.write('cod,log,num,c1,c2,c2_num,c3,c3_num,c4,c4_num,DMS_lat,DMS_lon,lat,lon,localidade,desc1,desc2,cep,place')
-
-    # File 1 to file 2
-    ct = 0
-    for line in f:
-        data = fixedwidth2list(line)
-        lat = data[10].split(' ')
-        lon = data[11].split(' ')
-        if len(lat) == len(lon) == 4:
-            line_out = ','.join(data[0:10] + [dms(lat)] + [dms(lon)] + [dms2dd(lat)] + [dms2dd(lon)] + data[12:])
-            f_out.write('\n' + line_out + ',isolated_dwelling')
-            ct += 1
 
 else:
     print('Nada foi feito.')
