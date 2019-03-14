@@ -8,7 +8,7 @@ __date__ = '2019/03/14'
 __status__ = "Production"
 
 # This software is provided "AS-IS" without any express or implied warranty, in the hope that it will be useful.
-# Contact the author for any questions!
+# Contact the author for any question!
 
 # Imports
 import re
@@ -26,7 +26,7 @@ print("  1. Após teclar ENTER, selecione um arquivo TXT com dados do IBGE/CNEFE
 print("  * Codificações suportadas: UTF-8 ou ANSI/Windows 1250.")
 print("  2. Informe o tipo de lista de endereços do arquivo txt selecionado.")
 print("  3. O programa irá tentar convertê-lo em arquivo CVS formatado para o JOSM.")
-print("  * JOSM requer o plug-in Opendata.")
+print("  * JOSM requer o plug-in OpenData.")
 print("  4. O arquivo CVS será salvo com o mesmo nome na mesma pasta do arquivo TXT.")
 input("\nTecle ENTER para prosseguir: ")
 
