@@ -4,8 +4,11 @@
 
 __author__ = 'Igor Eliezer'
 __copyright__ = "Copyright 2018-2019"
-__date__ = '2018/12/21'
-__status__ = "Prototype"
+__date__ = '2019/03/14'
+__status__ = "Production"
+
+# This software is provided "AS-IS" without any express or implied warranty, in the hope that it will be useful.
+# Contact the author for any questions!
 
 # Imports
 import re
@@ -16,7 +19,7 @@ from tkinter import filedialog
 # Messages
 print("\n=========== IBGE2JOSM ===========")
 print("Programa que converte dados do IBGE/CNEFE para usar no JOSM.")
-print("Criado por: " + __author__ + " Arquiteto Urbanista e Desenvolvedor (igoreliezer.com)")
+print("Criado por: " + __author__ + " Arquiteto e Urbanista (igoreliezer.com)")
 print("Data: " + __date__)
 print("\nInstruções")
 print("  1. Após teclar ENTER, selecione um arquivo TXT com dados do IBGE/CNEFE.")
@@ -154,4 +157,4 @@ if option in ['1', '2'] and file:
     # Finish
     print("Salvo em: " + file_out)
 
-input("Tecle ENTER para sair: ")
+input("\nTecle ENTER para sair: ")
