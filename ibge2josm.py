@@ -37,7 +37,7 @@ def select_file():
 Select file
     :return: string
     """
-    print("Selecionando arquivo...")
+    print("Aguardando seleção de arquivo...")
     Tk().withdraw()
     cwd = "/"
     filename = filedialog.askopenfilename(initialdir=cwd, title="Selecione um arquivo para converter",
