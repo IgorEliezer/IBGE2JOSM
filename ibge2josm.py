@@ -93,13 +93,14 @@ Convert fixed width line string from a file into list.
 file = select_file()
 
 if file:
+    print('Arquivo selecionado: ' + file + '.')
     option = input("\nInforme o tipo de lista de endereços para conversão:\n"                   
                    "  1 = Por distrito/subsdistrito\n"
                    "  2 = Por setor censitário\n"
                    "  ENTER ou qualquer tecla = sair\n\n"
                    "Entre a opção: ")
 
-# Por distrito/subsdistrito
+# Option 1 - Por distrito/subsdistrito
 if option == '1' and file:
     # select and generate the header
     f = open(file, 'r', encoding='windows-1250')
@@ -118,7 +119,7 @@ if option == '1' and file:
             f_out.write('\n' + line_out + ',isolated_dwelling')
             ct += 1
 
-# Por setor censitário
+# Option 2 - Por setor censitário
 elif option == '2' and file:
     # select and try to read the header
     try:
